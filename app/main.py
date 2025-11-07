@@ -11,7 +11,7 @@ import requests
 import json
 import os
 from pathlib import Path
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Dict, Any
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -30,13 +30,13 @@ app.add_middleware(
 )
 
 # Ollama configuration
-OLLAMA_API_URL = "http://localhost:11434/api"
-MODEL_NAME = "tinyllama"
+OLLAMA_API_URL: str = "http://localhost:11434/api"
+MODEL_NAME: str = "tinyllama"
 
 # Get the app directory
-APP_DIR = Path(__file__).parent
-STATIC_DIR = APP_DIR / "static"
-TEMPLATES_DIR = APP_DIR / "templates"
+APP_DIR: Path = Path(__file__).parent
+STATIC_DIR: Path = APP_DIR / "static"
+TEMPLATES_DIR: Path = APP_DIR / "templates"
 
 # Mount static files
 if STATIC_DIR.exists():
@@ -45,10 +45,10 @@ if STATIC_DIR.exists():
 
 # Health check endpoint
 @app.get("/api/health")
-async def health_check():
+async def health_check() -> Dict[str, Any]:
     """Check if both the API and Ollama service are running."""
     try:
-        response = requests.get(f"{OLLAMA_API_URL}/tags", timeout=2)
+        response: requests.Response = requests.get(f"{OLLAMA_API_URL}/tags", timeout=2)
         if response.status_code == 200:
             return {
                 "status": "healthy",
@@ -61,13 +61,13 @@ async def health_check():
 
 # Get available models
 @app.get("/api/models")
-async def get_models():
+async def get_models() -> Dict[str, Any]:
     """Get list of available Ollama models."""
     try:
-        response = requests.get(f"{OLLAMA_API_URL}/tags", timeout=5)
+        response: requests.Response = requests.get(f"{OLLAMA_API_URL}/tags", timeout=5)
         if response.status_code == 200:
-            data = response.json()
-            models = [model["name"] for model in data.get("models", [])]
+            data: Dict[str, Any] = response.json()
+            models: list[str] = [model["name"] for model in data.get("models", [])]
             return {
                 "models": models,
                 "current_model": MODEL_NAME,
@@ -78,24 +78,24 @@ async def get_models():
 
 
 @app.post("/api/chat")
-async def chat(request: Request):
+async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
     """
     Chat endpoint that accepts a message and streams the response from Ollama.
     Supports both streaming and non-streaming responses.
     """
     try:
-        body = await request.json()
-        user_message = body.get("message", "").strip()
-        stream = body.get("stream", True)
+        body: Dict[str, Any] = await request.json()
+        user_message: str = body.get("message", "").strip()
+        stream: bool = body.get("stream", True)
 
         if not user_message:
             raise HTTPException(status_code=400, detail="Message cannot be empty")
 
         # Prepare the prompt
-        prompt = user_message
+        prompt: str = user_message
 
         # Make request to Ollama
-        ollama_payload = {
+        ollama_payload: Dict[str, Any] = {
             "model": MODEL_NAME,
             "prompt": prompt,
             "stream": stream,
@@ -104,7 +104,7 @@ async def chat(request: Request):
             "top_k": 40,
         }
 
-        response = requests.post(
+        response: requests.Response = requests.post(
             f"{OLLAMA_API_URL}/generate",
             json=ollama_payload,
             stream=stream,
@@ -123,7 +123,7 @@ async def chat(request: Request):
                 try:
                     for line in response.iter_lines():
                         if line:
-                            data = json.loads(line)
+                            data: Dict[str, Any] = json.loads(line)
                             if "response" in data:
                                 yield data["response"]
                 except json.JSONDecodeError:
@@ -137,7 +137,7 @@ async def chat(request: Request):
             )
         else:
             # Return complete response
-            data = response.json()
+            data: Dict[str, Any] = response.json()
             return {
                 "response": data.get("response", ""),
                 "model": MODEL_NAME,
@@ -154,9 +154,9 @@ async def chat(request: Request):
 
 # Serve the main HTML page
 @app.get("/")
-async def serve_index():
+async def serve_index() -> FileResponse:
     """Serve the main chat application page."""
-    index_path = TEMPLATES_DIR / "index.html"
+    index_path: Path = TEMPLATES_DIR / "index.html"
     if index_path.exists():
         return FileResponse(str(index_path), media_type="text/html")
     else:
@@ -164,7 +164,7 @@ async def serve_index():
 
 
 @app.get("/api/info")
-async def get_info():
+async def get_info() -> Dict[str, Any]:
     """Get application information."""
     return {
         "app_name": "Ollama Chat Application",

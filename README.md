@@ -11,6 +11,14 @@ A modern, feature-rich web chat application powered by local LLM inference using
 - 📊 **Zero Dependencies (Frontend)** - Pure HTML/CSS/JavaScript
 - 🛡️ **Privacy-First** - All processing local, no external calls
 
+## Screenshots
+
+### Chat Interface
+![Ollama Chat App UI](screenshots/app-ui.png)
+
+### In-Action
+![Chat in Progress](screenshots/app-chat.png)
+
 ## Quick Start (5 minutes)
 
 ### Prerequisites
@@ -26,8 +34,7 @@ ollama serve
 # Terminal 2: Pull model (one-time)
 ollama pull tinyllama
 
-# Terminal 3: Start app
-cd ollama-chat-app
+# Terminal 3: Install dependencies and start app
 uv sync          # Install dependencies
 uv run app/main.py
 
@@ -36,16 +43,22 @@ uv run app/main.py
 
 Done! Start chatting. 🚀
 
+**Note:** Make sure `ollama serve` is running in a separate terminal before starting the FastAPI app.
+
 ## Project Structure
 
 ```
-ollama-chat-app/
+.
 ├── app/
-│   ├── main.py              # FastAPI backend (170 lines)
+│   ├── main.py              # FastAPI backend with type hints
 │   └── templates/
 │       └── index.html       # Complete web UI (1000+ lines)
+├── screenshots/
+│   ├── app-ui.png          # Application UI screenshot
+│   └── app-chat.png        # Chat interaction screenshot
 ├── pyproject.toml           # Project config
 ├── uv.lock                  # Dependencies lock
+├── requirements.txt         # Alternative dependency list
 ├── README.md               # This file
 └── PROMPTS.md              # Development documentation
 ```
@@ -118,6 +131,8 @@ curl http://localhost:11434/api/tags
 # Or restart: killall ollama && ollama serve
 ```
 
+**Important:** Make sure you've run `ollama serve` in a separate terminal before starting the FastAPI application.
+
 ### "Model not found"
 ```bash
 ollama list
@@ -155,13 +170,13 @@ Browser (HTML/CSS/JS)
 
 ## Code Quality
 
-✅ **Type hints** on all Python functions
-✅ **Docstrings** for every endpoint
-✅ **Error handling** with HTTPException
-✅ **CORS middleware** for flexibility
-✅ **Async/await** for performance
-✅ **Responsive CSS** with custom properties
-✅ **Vanilla JS** with proper event handling
+✅ **Type hints** on all Python functions - Full type annotations for all function parameters and return types
+✅ **Docstrings** for every endpoint - Clear documentation of what each endpoint does
+✅ **Error handling** with HTTPException - Graceful error responses
+✅ **CORS middleware** for flexibility - Cross-origin requests supported
+✅ **Async/await** for performance - Non-blocking I/O operations
+✅ **Responsive CSS** with custom properties - Mobile-friendly design
+✅ **Vanilla JS** with proper event handling - No external dependencies required
 
 ## Performance Characteristics
 
@@ -177,7 +192,8 @@ Browser (HTML/CSS/JS)
 ### Adding a New Endpoint
 ```python
 @app.get("/api/your-endpoint")
-async def your_endpoint():
+async def your_endpoint() -> dict:
+    """Describe what this endpoint does."""
     return {"message": "response"}
 ```
 
@@ -230,7 +246,7 @@ A: Yes. Change `MODEL_NAME` and run `ollama pull <model>`. Be aware of RAM requi
 A: Yes, completely offline after setup.
 
 **Q: Can I share this with others?**
-A: Yes! Share the whole `ollama-chat-app` directory. They just need Ollama + Python 3.11.
+A: Yes! Share the project folder. They just need Ollama + Python 3.11.
 
 ## Resources
 
