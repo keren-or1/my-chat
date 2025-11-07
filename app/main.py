@@ -77,7 +77,7 @@ async def get_models() -> Dict[str, Any]:
         raise HTTPException(status_code=503, detail=f"Failed to fetch models: {str(e)}")
 
 
-@app.post("/api/chat")
+@app.post("/api/chat", response_model=None)
 async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
     """
     Chat endpoint that accepts a message and streams the response from Ollama.
