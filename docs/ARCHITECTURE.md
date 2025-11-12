@@ -10,7 +10,7 @@
 - **[README.md](../README.md)** - Setup instructions and usage guide
 - **[PRD.md](./PRD.md)** - Product requirements and specifications
 - **[RESEARCH_ANALYSIS.md](./RESEARCH_ANALYSIS.md)** - Parameter analysis and performance metrics
-- **[PROMPTS.md](../PROMPTS.md)** - Development prompts and decisions
+- **[PROMPTS.md](PROMPTS.md)** - Development prompts and decisions
 
 ---
 
