@@ -19,18 +19,18 @@ A modern, feature-rich web chat application powered by local LLM inference using
 
 ### Deployment & Operations
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Instructions for Docker, Kubernetes, cloud platforms (AWS/GCP/Heroku)
-- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute, development setup, code standards, testing requirements
-- **[Changelog](CHANGELOG.md)** - Version history, features, improvements, and roadmap
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute, development setup, code standards, testing requirements
+- **[Changelog](docs/CHANGELOG.md)** - Version history, features, improvements, and roadmap
+
+### Quality Assurance & Compliance
+- **[Test Report](docs/TEST_REPORT.md)** - Automated testing results (31/31 tests passing, 80% coverage)
+- **[Accessibility Audit](docs/ACCESSIBILITY_AUDIT.md)** - WCAG 2.1 Level AA compliance assessment
+- **[Submission Checklist](docs/SUBMISSION_CHECKLIST.md)** - Complete verification against evaluation criteria
 
 ### Interactive Resources
 - **[Analytics Dashboard](http://localhost:8000/dashboard)** - Real-time visualizations with Charts.js (performance, research insights, model data)
 - **[API Documentation](http://localhost:8000/docs)** - Interactive Swagger UI for all endpoints
 - **[ReDoc Documentation](http://localhost:8000/redoc)** - Alternative API documentation format
-
-### Additional Documents
-- **[Test Report](TEST_REPORT.md)** - Automated testing results (31/31 tests passing, 80% coverage)
-- **[Accessibility Audit](ACCESSIBILITY_AUDIT.md)** - WCAG 2.1 compliance assessment
-- **[Submission Checklist](SUBMISSION_CHECKLIST.md)** - Complete verification against evaluation criteria
 
 ---
 
