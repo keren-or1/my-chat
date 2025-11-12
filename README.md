@@ -23,7 +23,7 @@ A modern, feature-rich web chat application powered by local LLM inference using
 - **[Changelog](docs/CHANGELOG.md)** - Version history, features, improvements, and roadmap
 
 ### Quality Assurance & Compliance
-- **[Test Report](docs/TEST_REPORT.md)** - Automated testing results (31/31 tests passing, 80% coverage)
+- **[Test Report](docs/TEST_REPORT.md)** - Automated testing results (46/46 tests passing, 83% coverage)
 - **[Accessibility Audit](docs/ACCESSIBILITY_AUDIT.md)** - WCAG 2.1 Level AA compliance assessment
 - **[Submission Checklist](docs/SUBMISSION_CHECKLIST.md)** - Complete verification against evaluation criteria
 
@@ -85,12 +85,12 @@ uv sync
 
 **Step 4: Start the Application**
 ```bash
-python3 app/main.py
+python3 src/main.py
 ```
 
 Or using uvicorn directly:
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Step 5: Open in Browser**
@@ -109,7 +109,7 @@ lsof -i :8000
 kill -9 <PID>
 
 # Option 2: Run on different port
-uvicorn app.main:app --host 0.0.0.0 --port 8001
+uvicorn src.main:app --host 0.0.0.0 --port 8001
 ```
 
 **If Ollama is not running:**
@@ -270,7 +270,7 @@ ollama pull tinyllama
 ```
 
 ### "Port 8000 already in use"
-Change port in `app/main.py` line `uvicorn.run(...)` to 8001, 8002, etc.
+Change port in `src/main.py` line `uvicorn.run(...)` to 8001, 8002, etc.
 
 ### "Slow responses"
 - First call: 3-5s (model loading). Subsequent: 0.5-2s (cached)
@@ -281,7 +281,7 @@ Change port in `app/main.py` line `uvicorn.run(...)` to 8001, 8002, etc.
 
 ### Run the Test Suite
 
-The application includes a comprehensive test suite with 40+ test cases covering all API endpoints, error scenarios, and edge cases.
+The application includes a comprehensive test suite with 46 test cases covering all API endpoints, error scenarios, and edge cases.
 
 ```bash
 # Install test dependencies
@@ -291,7 +291,7 @@ pip install pytest pytest-asyncio
 pytest tests/test_chat_api.py -v
 
 # Run with coverage report
-pytest tests/test_chat_api.py --cov=app --cov-report=html
+pytest tests/test_chat_api.py --cov=src --cov-report=html
 
 # Run specific test class
 pytest tests/test_chat_api.py::TestChatEndpoint -v
@@ -310,7 +310,7 @@ The test suite includes:
 - **Integration Tests** - End-to-end workflow testing
 - **Edge Cases** - Special characters, long messages, concurrent requests
 
-**Target Coverage:** 70%+ of application code
+**Current Coverage:** 83% of application code (target: 70%+) ✅
 
 ### Code Quality Metrics
 
@@ -439,15 +439,14 @@ cp config/.env.example .env
 ollama serve
 
 # Run development server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Project Architecture
 
 The application follows a clean, modular architecture:
 
-- **app/main.py** - Original FastAPI implementation
-- **src/main.py** - Production-ready implementation with 100% documentation
+- **src/main.py** - Production-ready FastAPI implementation with 100% documentation
 - **app/templates/index.html** - Frontend (HTML/CSS/JavaScript)
 - **tests/** - Comprehensive test suite
 - **docs/** - Technical documentation and architecture records
@@ -500,7 +499,7 @@ pytest tests/ -v
 pytest tests/test_chat_api.py::TestChatEndpoint::test_chat_success -v
 
 # Run with coverage
-pytest tests/ --cov=app --cov-report=term-missing
+pytest tests/ --cov=src --cov-report=term-missing
 
 # Watch mode (requires pytest-watch)
 ptw tests/
