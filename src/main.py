@@ -93,6 +93,14 @@ class Config:
     HEALTH_CHECK_INTERVAL: int = int(os.getenv("HEALTH_CHECK_INTERVAL", "5"))
     HEALTH_CHECK_TIMEOUT: int = int(os.getenv("HEALTH_CHECK_TIMEOUT", "2"))
 
+    # CORS Configuration (Security)
+    CORS_ORIGINS: list[str] = (
+        os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8000").split(",")
+    )
+    CORS_ALLOW_CREDENTIALS: bool = os.getenv("CORS_ALLOW_CREDENTIALS", "true").lower() == "true"
+    CORS_ALLOW_METHODS: list[str] = os.getenv("CORS_ALLOW_METHODS", "GET,POST,OPTIONS").split(",")
+    CORS_ALLOW_HEADERS: list[str] = os.getenv("CORS_ALLOW_HEADERS", "Content-Type").split(",")
+
     # Application Metadata
     APP_NAME: str = os.getenv("APP_NAME", "Ollama Chat Application")
     APP_VERSION: str = os.getenv("APP_VERSION", "1.1.0")
@@ -154,14 +162,15 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add CORS middleware for frontend communication
+# Add CORS middleware for frontend communication (configurable for security)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=Config.CORS_ORIGINS,
+    allow_credentials=Config.CORS_ALLOW_CREDENTIALS,
+    allow_methods=Config.CORS_ALLOW_METHODS,
+    allow_headers=Config.CORS_ALLOW_HEADERS,
 )
+logger.info(f"CORS enabled for origins: {', '.join(Config.CORS_ORIGINS)}")
 
 # Mount static files if directory exists
 if STATIC_DIR.exists():
@@ -171,6 +180,43 @@ if STATIC_DIR.exists():
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
+
+def sanitize_error_message(error: Exception) -> str:
+    """
+    Sanitize error messages to prevent information disclosure.
+
+    Removes sensitive information like file paths, internal details
+    from exception messages before returning to client.
+
+    Args:
+        error (Exception): The exception to sanitize
+
+    Returns:
+        str: Safe error message for client
+
+    Examples:
+        >>> sanitize_error_message(Exception("/home/user/.ollama/model.bin not found"))
+        "An error occurred processing your request"
+    """
+    error_str = str(error).lower()
+
+    # Map of dangerous patterns to safe messages
+    dangerous_patterns = {
+        "connection": "Connection error - service unavailable",
+        "timeout": "Request timeout - service taking too long",
+        "json": "Invalid request format",
+        "model": "Model processing error",
+        "ollama": "LLM service error",
+    }
+
+    # Check for dangerous patterns
+    for pattern, safe_msg in dangerous_patterns.items():
+        if pattern in error_str:
+            return safe_msg
+
+    # Default safe message
+    return "An error occurred processing your request"
+
 
 def validate_message(message: str) -> str:
     """
@@ -392,14 +438,14 @@ async def get_models() -> Dict[str, Any]:
             logger.error(f"Failed to fetch models: HTTP {response.status_code}")
             raise HTTPException(
                 status_code=503,
-                detail=f"Ollama error: {response.text}"
+                detail="Failed to fetch available models"
             )
 
     except RequestException as e:
         logger.error(f"Failed to fetch models: {str(e)}")
         raise HTTPException(
             status_code=503,
-            detail=f"Failed to fetch models: {str(e)}"
+            detail=sanitize_error_message(e)
         )
 
 # ============================================================================
@@ -534,13 +580,13 @@ async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
         logger.warning(f"Message validation failed: {str(e)}")
         raise HTTPException(
             status_code=400,
-            detail=str(e)
+            detail=sanitize_error_message(e)
         )
     except Exception as e:
         logger.error(f"Error parsing request: {str(e)}")
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid request: {str(e)}"
+            detail=sanitize_error_message(e)
         )
 
     try:
@@ -607,7 +653,7 @@ async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
                     logger.info("Stream interrupted by client")
                 except Exception as e:
                     logger.error(f"Error during streaming: {str(e)}")
-                    yield f"[Stream error: {str(e)}]"
+                    yield f"[Stream error: {sanitize_error_message(e)}]"
 
             return StreamingResponse(
                 generate(),
