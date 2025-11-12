@@ -1,104 +1,31 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  # Ollama LLM Service
   ollama:
     image: ollama/ollama:latest
-    container_name: ollama-service
+    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
-      # Persist model downloads
-      - ollama-models:/root/.ollama
-    environment:
-      OLLAMA_HOST: 0.0.0.0:11434
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      - app-network
+      - ollama:/root/.ollama
     restart: unless-stopped
+    command: serve
 
-  # Chat Application Service
   chat-app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: chat-app
+    environment:
+      - OLLAMA_API_URL=http://ollama:11434/api
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
     depends_on:
-      ollama:
-        condition: service_healthy
+      - ollama
     ports:
       - "8000:8000"
-    environment:
-      OLLAMA_API_URL: http://ollama:11434/api
-      OLLAMA_MODEL: tinyllama
-      API_HOST: 0.0.0.0
-      API_PORT: 8000
-      LLM_TEMPERATURE: 0.7
-      LLM_TOP_P: 0.9
-      LLM_TOP_K: 40
-      HEALTH_CHECK_INTERVAL: 5
-      HEALTH_CHECK_TIMEOUT: 2
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      - app-network
     restart: unless-stopped
-
-  # Nginx Reverse Proxy (Optional - for production)
-  nginx:
-    image: nginx:alpine
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
-    depends_on:
-      - chat-app
-    networks:
-      - app-network
-    restart: unless-stopped
-    profiles:
-      - production
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
 
 volumes:
-  ollama-models:
-    driver: local
-
-networks:
-  app-network:
-    driver: bridge
-
-# ============================================================================
-# USAGE INSTRUCTIONS
-# ============================================================================
-#
-# Development:
-#   docker-compose up
-#
-# Production (with Nginx):
-#   docker-compose --profile production up
-#
-# Build without pulling:
-#   docker-compose build --no-cache
-#
-# View logs:
-#   docker-compose logs -f chat-app
-#
-# Stop services:
-#   docker-compose down
-#
-# Clean up volumes:
-#   docker-compose down -v
-#
-# ============================================================================
+  ollama:
