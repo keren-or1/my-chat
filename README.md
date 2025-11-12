@@ -39,28 +39,72 @@ For comprehensive project details, refer to:
 ## Quick Start (5 minutes)
 
 ### Prerequisites
-- Ollama installed ([ollama.ai](https://ollama.ai))
-- Python 3.11+
+- Ollama installed and running ([ollama.ai](https://ollama.ai))
+- Python 3.11+ (tested with 3.11.8)
 - 4GB+ RAM, 2GB disk space
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
-### Setup
+### Installation & Running
+
+**Step 1: Start Ollama Service**
 ```bash
-# Terminal 1: Start Ollama service
+# Make sure Ollama is running in a separate terminal
 ollama serve
-
-# Terminal 2: Pull model (one-time)
-ollama pull tinyllama
-
-# Terminal 3: Install dependencies and start app
-uv sync          # Install dependencies
-uv run app/main.py
-
-# Open browser: http://localhost:8000
 ```
 
-Done! Start chatting. 🚀
+**Step 2: Pull the Model (one-time setup)**
+```bash
+ollama pull tinyllama
+```
 
-**Note:** Make sure `ollama serve` is running in a separate terminal before starting the FastAPI app.
+Verify the model is installed:
+```bash
+curl http://localhost:11434/api/tags
+```
+
+**Step 3: Install Dependencies**
+```bash
+cd assignment1
+uv sync
+```
+
+**Step 4: Start the Application**
+```bash
+python3 app/main.py
+```
+
+Or using uvicorn directly:
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Step 5: Open in Browser**
+```
+http://localhost:8000
+```
+
+✅ **Done!** You should see the Ollama Chat application. Start typing messages and enjoy!
+
+### Troubleshooting Setup
+
+**If port 8000 is already in use:**
+```bash
+# Option 1: Kill existing process
+lsof -i :8000
+kill -9 <PID>
+
+# Option 2: Run on different port
+uvicorn app.main:app --host 0.0.0.0 --port 8001
+```
+
+**If Ollama is not running:**
+```bash
+# Check if Ollama service is accessible
+curl http://localhost:11434/api/tags
+
+# If it fails, start Ollama
+ollama serve
+```
 
 ## Project Structure
 
