@@ -1,0 +1,164 @@
+# Environment & Configuration
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+env.bak/
+venv.bak/
+.venv/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+.nose*
+*.cover
+.coverage
+coverage.xml
+*.cover
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+.vim
+.ecos
+.eosin
+.emacs.d/
+*~
+.flymake*
+.elc
+*.orig
+.svn
+.hg
+.bzr
+._*
+.cvs
+.cvsignore
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Node (if used in frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Logs
+*.log
+logs/
+*.log*
+
+# Data & Results
+data/input/*
+!data/.gitkeep
+results/raw/*
+results/processed/*
+!results/.gitkeep
+
+# Build & Artifacts
+dist/
+build/
+*.whl
+*.tar.gz
+
+# Docker
+.docker
+.dockerignore
+
+# Application specific
+.venv
+ollama_cache/
+*.db
+*.sqlite
+*.sqlite3
+temp/
+tmp/
+cache/
+
+# Certificates & Secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+
+# OS-specific files
+.Thumbs.db
+.AppleDouble
+
+# IntelliJ
+*.iml
+.idea/
+out/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+
+# Gradle
+.gradle
+build/
+
+# Misc
+*.swp
+*~
+.#*
+*.bak
+*.tmp

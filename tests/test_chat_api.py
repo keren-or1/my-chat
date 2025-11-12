@@ -493,5 +493,211 @@ class TestIntegration:
 # TEST EXECUTION
 # ============================================================================
 
+# ============================================================================
+# CONFIGURATION TESTS
+# ============================================================================
+
+class TestConfigurationManagement:
+    """Tests for application configuration management."""
+
+    def test_config_defaults(self):
+        """Test that Config class has proper default values."""
+        assert Config.MODEL_NAME == "tinyllama"
+        assert Config.API_PORT == 8000
+        assert Config.API_HOST == "0.0.0.0"
+        assert 0.0 <= Config.TEMPERATURE <= 1.0
+        assert 0.0 <= Config.TOP_P <= 1.0
+        assert Config.TOP_K >= 0
+        assert Config.OLLAMA_TIMEOUT > 0
+        assert Config.HEALTH_CHECK_TIMEOUT > 0
+
+    def test_config_ollama_url(self):
+        """Test that Ollama URL is properly configured."""
+        assert "localhost" in Config.OLLAMA_API_URL or "127.0.0.1" in Config.OLLAMA_API_URL
+        assert "11434" in Config.OLLAMA_API_URL or "http" in Config.OLLAMA_API_URL
+
+    def test_config_app_metadata(self):
+        """Test application metadata in configuration."""
+        assert Config.APP_NAME == "Ollama Chat Application"
+        assert len(Config.APP_VERSION) > 0
+        assert Config.APP_VERSION[0].isdigit()
+
+# ============================================================================
+# STREAMING RESPONSE TESTS
+# ============================================================================
+
+class TestStreamingResponses:
+    """Tests for streaming response handling."""
+
+    @patch('main.requests.post')
+    def test_chat_streaming_empty_response(self, mock_post, client):
+        """Test streaming with empty response lines."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.iter_lines.return_value = [
+            '{"response": ""}',
+            '{"response": " "}',
+        ]
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Test",
+            "stream": True
+        })
+
+        assert response.status_code == 200
+
+    @patch('main.requests.post')
+    def test_chat_streaming_multiple_lines(self, mock_post, client):
+        """Test streaming with many response lines."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        lines = ['{"response": "word' + str(i) + '"}' for i in range(50)]
+        mock_response.iter_lines.return_value = lines
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Test",
+            "stream": True
+        })
+
+        assert response.status_code == 200
+
+    @patch('main.requests.post')
+    def test_chat_streaming_json_parse_error(self, mock_post, client):
+        """Test handling of malformed JSON in streaming response."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.iter_lines.return_value = [
+            'invalid json',
+            '{"response": "recovered"}',
+        ]
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Test",
+            "stream": True
+        })
+
+        assert response.status_code == 200
+
+# ============================================================================
+# ERROR MESSAGE TESTS
+# ============================================================================
+
+class TestErrorHandling:
+    """Tests for comprehensive error handling."""
+
+    @patch('main.requests.post')
+    def test_chat_request_exception_general(self, mock_post, client):
+        """Test general RequestException handling."""
+        mock_post.side_effect = requests.RequestException("Generic error")
+
+        response = client.post("/api/chat", json={
+            "message": "Hello",
+            "stream": True
+        })
+
+        assert response.status_code == 503
+        assert "error" in response.json()
+
+    @patch('main.requests.get')
+    def test_models_timeout(self, mock_get, client):
+        """Test timeout in models endpoint."""
+        mock_get.side_effect = Timeout("Timeout")
+
+        response = client.get("/api/models")
+
+        assert response.status_code == 503
+
+    def test_validation_message_boundaries(self):
+        """Test message validation at exact boundaries."""
+        # Test message with exactly 4000 characters
+        msg_4000 = "a" * 4000
+        assert validate_message(msg_4000) == msg_4000
+
+        # Test message with special chars at boundary
+        msg_special = "a" * 3999 + "😀"
+        assert len(validate_message(msg_special)) <= 4000
+
+# ============================================================================
+# PARAMETER VALIDATION TESTS
+# ============================================================================
+
+class TestParameterValidation:
+    """Tests for parameter validation and edge cases."""
+
+    @patch('main.requests.post')
+    def test_chat_with_all_parameters(self, mock_post, client):
+        """Test chat endpoint with all optional parameters."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.iter_lines.return_value = ['{"response": "OK"}']
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Hello world",
+            "stream": True,
+            "temperature": 0.5,
+            "top_p": 0.9,
+            "top_k": 40
+        })
+
+        assert response.status_code == 200
+
+    @patch('main.requests.post')
+    def test_chat_with_default_parameters(self, mock_post, client):
+        """Test chat with minimal required parameters."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"response": "OK"}
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Hello"
+        })
+
+        assert response.status_code == 200
+
+# ============================================================================
+# EDGE CASE TESTS
+# ============================================================================
+
+class TestEdgeCases:
+    """Tests for edge cases and corner scenarios."""
+
+    def test_message_with_only_numbers(self):
+        """Test validation of numeric-only messages."""
+        result = validate_message("12345")
+        assert result == "12345"
+
+    def test_message_with_only_punctuation(self):
+        """Test validation of punctuation-only messages."""
+        result = validate_message("!@#$%")
+        assert result == "!@#$%"
+
+    def test_message_with_newlines_and_tabs(self):
+        """Test handling of whitespace characters."""
+        msg = "line1\nline2\tindented"
+        result = validate_message(msg)
+        assert "\n" in result
+        assert "\t" in result
+
+    @patch('main.requests.post')
+    def test_chat_with_very_long_model_response(self, mock_post, client):
+        """Test handling of very long model responses."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        long_lines = ['{"response": "' + "x" * 1000 + '"}' for _ in range(5)]
+        mock_response.iter_lines.return_value = long_lines
+        mock_post.return_value = mock_response
+
+        response = client.post("/api/chat", json={
+            "message": "Test",
+            "stream": True
+        })
+
+        assert response.status_code == 200
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
