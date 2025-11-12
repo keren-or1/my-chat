@@ -83,6 +83,10 @@ A modern, feature-rich web chat application powered by local LLM inference using
 ### In-Action
 ![Chat in Progress](screenshots/app-chat.png)
 
+### Dashboard
+![Analytics Dashboard](screenshots/dashboard.png)
+![Dashboard Response](screenshots/dashboard-response.png)
+
 ## Quick Start (5 minutes)
 
 ### Prerequisites
@@ -160,7 +164,6 @@ ollama serve
 ├── src/
 │   └── main.py                    # Production backend with 100% docstrings & type hints
 ├── app/
-│   ├── main.py                    # Original FastAPI implementation
 │   └── templates/
 │       └── index.html             # Complete web UI (1000+ lines)
 ├── tests/
@@ -168,7 +171,17 @@ ollama serve
 ├── docs/
 │   ├── PRD.md                     # Product Requirements Document (specifications, KPIs)
 │   ├── ARCHITECTURE.md            # Architecture Design with C4 Model & 7 ADRs
-│   └── RESEARCH_ANALYSIS.md       # Parameter sensitivity analysis & performance data
+│   ├── RESEARCH_ANALYSIS.md       # Parameter sensitivity analysis & performance data
+│   ├── TEST_REPORT.md             # Automated testing results
+│   ├── ACCESSIBILITY_AUDIT.md     # WCAG 2.1 AA assessment
+│   ├── CODEBASE_ANALYSIS.md       # Codebase overview and metrics
+│   ├── SECURITY.md                # Security policy
+│   ├── CODE_OF_CONDUCT.md         # Community standards
+│   ├── CONTRIBUTING.md            # Contributing guide
+│   ├── DEPLOYMENT.md              # Deployment guide
+│   ├── PROMPTS.md                 # Development prompts
+│   ├── SUBMISSION_CHECKLIST.md    # Submission verification
+│   └── MATHEMATICAL_ANALYSIS.md   # Mathematical/quantitative analysis
 ├── config/
 │   └── .env.example               # Environment configuration template (14 variables)
 ├── screenshots/
