@@ -31,7 +31,7 @@ from typing import AsyncGenerator, Dict, Any, Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import requests
@@ -411,7 +411,8 @@ async def get_models() -> Dict[str, Any]:
     summary="Send Chat Message",
     description="Send a message and get response from Ollama with optional streaming",
     response_description="Model response (streaming or buffered)",
-    tags=["Chat"]
+    tags=["Chat"],
+    response_model=None
 )
 async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
     """
@@ -793,11 +794,14 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         JSONResponse: Formatted error response
     """
     logger.warning(f"HTTP {exc.status_code}: {exc.detail}")
-    return {
-        "error": True,
-        "status_code": exc.status_code,
-        "detail": exc.detail
-    }
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": True,
+            "status_code": exc.status_code,
+            "detail": exc.detail
+        }
+    )
 
 # ============================================================================
 # MAIN ENTRY POINT
