@@ -190,7 +190,11 @@ ollama serve
 │   ├── app-ui.png                 # Application UI screenshot
 │   ├── app-chat.png               # Chat interaction screenshot
 │   ├── dashboard.png              # Analytics dashboard overview
-│   └── dashboard-response.png     # Dashboard responses view
+│   ├── dashboard-response.png     # Dashboard responses view
+│   ├── docs.png                   # Documentation overview
+│   ├── Performance Analysis.png   # Performance analysis visual
+│   ├── Research and Analasys.png  # Research & analysis visual
+│   └── model info.png             # Model info visual
 ├── pyproject.toml                 # Project configuration
 ├── uv.lock                        # Dependency lock file
 ├── requirements.txt               # Alternative dependency list
