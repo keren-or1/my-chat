@@ -6,11 +6,19 @@
 
 ---
 
+### Related Documentation
+- **[README.md](../README.md)** - Setup instructions and usage guide
+- **[PRD.md](./PRD.md)** - Product requirements and specifications
+- **[RESEARCH_ANALYSIS.md](./RESEARCH_ANALYSIS.md)** - Parameter analysis and performance metrics
+- **[PROMPTS.md](../PROMPTS.md)** - Development prompts and decisions
+
+---
+
 ## Table of Contents
-1. [System Context (C4 Level 1)](#system-context)
-2. [Container Architecture (C4 Level 2)](#container-architecture)
-3. [Component Architecture (C4 Level 3)](#component-architecture)
-4. [Architecture Decision Records (ADRs)](#architecture-decision-records)
+1. [System Context (C4 Level 1)](#system-context-c4-level-1)
+2. [Container Architecture (C4 Level 2)](#container-architecture-c4-level-2)
+3. [Component Architecture (C4 Level 3)](#component-architecture-c4-level-3)
+4. [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
 5. [API Specifications](#api-specifications)
 6. [Data Flow Diagrams](#data-flow-diagrams)
 7. [Deployment Architecture](#deployment-architecture)
