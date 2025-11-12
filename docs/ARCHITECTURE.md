@@ -1,6 +1,9 @@
 # Architecture Documentation
 ## Ollama Chat Application - System Design & Decisions
 
+### Model Information Overview
+![Model Info](../screenshots/model%20info.png)
+
 **Version:** 1.0
 **Last Updated:** November 2025
 

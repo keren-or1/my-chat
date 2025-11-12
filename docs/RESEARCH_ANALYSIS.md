@@ -1,4 +1,12 @@
-# Research & Analysis Report
+# Research & Analysis
+
+## Visual Summaries
+
+### Performance Analysis
+![Performance Analysis](../screenshots/Performance%20Analysis.png)
+
+### Research and Analysis
+![Research and Analysis](../screenshots/Research%20and%20Analasys.png) Report
 ## Ollama Chat Application - Experimental Evaluation
 
 **Version:** 1.0
