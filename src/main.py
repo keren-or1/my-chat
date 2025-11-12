@@ -95,7 +95,7 @@ class Config:
 
     # Application Metadata
     APP_NAME: str = os.getenv("APP_NAME", "Ollama Chat Application")
-    APP_VERSION: str = os.getenv("APP_VERSION", "1.0.0")
+    APP_VERSION: str = os.getenv("APP_VERSION", "1.1.0")
 
 # ============================================================================
 # INITIALIZATION & STARTUP
@@ -747,6 +747,55 @@ async def serve_index() -> FileResponse:
     logger.debug(f"Serving index.html from {index_path}")
     return FileResponse(str(index_path), media_type="text/html")
 
+@app.get(
+    "/dashboard",
+    summary="Serve Analytics Dashboard",
+    description="Serve the analytics and performance dashboard",
+    response_description="HTML analytics dashboard",
+    tags=["UI"]
+)
+async def serve_dashboard() -> FileResponse:
+    """
+    Serve the analytics dashboard page.
+
+    This endpoint serves an interactive analytics dashboard that displays:
+    - System performance metrics
+    - Research analysis and findings
+    - Parameter sensitivity analysis
+    - Model comparison data
+    - Cost-benefit analysis
+    - Quality metrics
+    - Real-time status monitoring
+
+    File Path:
+        app/templates/dashboard.html
+
+    Returns:
+        FileResponse: HTML dashboard with embedded Charts.js visualizations
+
+    Raises:
+        HTTPException(404): If dashboard.html is not found
+
+    Examples:
+        Request:
+            GET http://localhost:8000/dashboard
+
+        Response (200):
+            Content-Type: text/html; charset=utf-8
+            [Interactive dashboard with charts and tables]
+    """
+    dashboard_path: Path = TEMPLATES_DIR / "dashboard.html"
+
+    if not dashboard_path.exists():
+        logger.error(f"dashboard.html not found at {dashboard_path}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"dashboard.html not found at {dashboard_path}"
+        )
+
+    logger.debug(f"Serving dashboard.html from {dashboard_path}")
+    return FileResponse(str(dashboard_path), media_type="text/html")
+
 # ============================================================================
 # ROOT ENDPOINT
 # ============================================================================
@@ -773,7 +822,9 @@ async def api_root() -> Dict[str, Any]:
             "chat": "/api/chat",
             "info": "/api/info",
             "ui": "/",
-            "docs": "/docs"
+            "dashboard": "/dashboard",
+            "docs": "/docs",
+            "redoc": "/redoc"
         }
     }
 

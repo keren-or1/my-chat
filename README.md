@@ -3,19 +3,34 @@
 A modern, feature-rich web chat application powered by local LLM inference using Ollama. No API keys, no data sent to external servers—everything runs on your machine.
 
 **Authors:** Tal & Keren
-**Version:** 1.0
-**Status:** Complete
+**Version:** 1.1.0
+**Status:** Complete & Production-Ready
 **Last Updated:** November 2025
 
 ---
 
-## 📚 Documentation
+## 📚 Documentation & Resources
 
-For comprehensive project details, refer to:
-- **[Product Requirements Document](docs/PRD.md)** - Complete feature specifications, success metrics, and design principles
-- **[Architecture Design Document](docs/ARCHITECTURE.md)** - C4 Model, Architecture Decision Records (ADRs), API specifications
-- **[Research & Analysis](docs/RESEARCH_ANALYSIS.md)** - Parameter sensitivity analysis, performance comparisons, cost analysis
+### Core Documentation
+- **[Product Requirements Document](docs/PRD.md)** - Complete feature specifications, 8 KPIs, success metrics, and design principles
+- **[Architecture Design Document](docs/ARCHITECTURE.md)** - C4 Model (Levels 1-3), 7 Architecture Decision Records (ADRs), API specifications
+- **[Research & Analysis](docs/RESEARCH_ANALYSIS.md)** - Parameter sensitivity analysis, model comparison, streaming impact, cost-benefit analysis
 - **[Development Prompts](PROMPTS.md)** - Detailed log of 21+ prompts used during development with decisions and rationale
+
+### Deployment & Operations
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Instructions for Docker, Kubernetes, cloud platforms (AWS/GCP/Heroku)
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute, development setup, code standards, testing requirements
+- **[Changelog](CHANGELOG.md)** - Version history, features, improvements, and roadmap
+
+### Interactive Resources
+- **[Analytics Dashboard](http://localhost:8000/dashboard)** - Real-time visualizations with Charts.js (performance, research insights, model data)
+- **[API Documentation](http://localhost:8000/docs)** - Interactive Swagger UI for all endpoints
+- **[ReDoc Documentation](http://localhost:8000/redoc)** - Alternative API documentation format
+
+### Additional Documents
+- **[Test Report](TEST_REPORT.md)** - Automated testing results (31/31 tests passing, 80% coverage)
+- **[Accessibility Audit](ACCESSIBILITY_AUDIT.md)** - WCAG 2.1 compliance assessment
+- **[Submission Checklist](SUBMISSION_CHECKLIST.md)** - Complete verification against evaluation criteria
 
 ---
 
