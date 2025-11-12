@@ -24,6 +24,8 @@ A modern, feature-rich web chat application powered by local LLM inference using
 
 ## 📚 Documentation & Resources
 
+![Documentation Overview](screenshots/docs.png)
+
 ### Core Documentation
 - **[Product Requirements Document](docs/PRD.md)** - Complete feature specifications, 8 KPIs, success metrics, and design principles
 - **[Architecture Design Document](docs/ARCHITECTURE.md)** - C4 Model (Levels 1-3), 7 Architecture Decision Records (ADRs), API specifications
