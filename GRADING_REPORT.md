@@ -84,7 +84,7 @@
   1. Start Ollama Service
   2. Pull Model (tinyllama)
   3. Install Dependencies (uv sync)
-  4. Start Application (python3 app/main.py)
+  4. Start Application (python3 src/main.py)
   5. Open Browser (http://localhost:8000)
 - ✅ **Configuration Documentation:** 14 environment variables documented
 - ✅ **Troubleshooting Guide:** Port conflicts, Ollama not running, slow responses

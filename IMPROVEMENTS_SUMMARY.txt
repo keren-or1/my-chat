@@ -220,7 +220,7 @@ UPDATED FILES:
 ✅ All docs files                 (Updated dates to November 2025)
 
 PRESERVED FILES:
-✅ app/main.py                    (Original implementation)
+✅ src/main.py                    (Original implementation)
 ✅ app/templates/index.html       (Frontend UI)
 ✅ screenshots/                   (UI screenshots)
 ✅ requirements.txt               (Dependencies)

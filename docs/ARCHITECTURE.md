@@ -103,7 +103,7 @@
 │  ├──────────────────────────────────────────────────┤ │
 │  │                                                  │ │
 │  │  Core Modules:                                  │ │
-│  │  - app/main.py                                  │ │
+│  │  - src/main.py                                  │ │
 │  │    * FastAPI application setup                  │ │
 │  │    * Endpoint definitions                       │ │
 │  │    * CORS middleware                            │ │
@@ -156,7 +156,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              app/main.py Components                      │
+│              src/main.py Components                      │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  ┌────────────────────────────────────────────────────┐ │
@@ -750,10 +750,10 @@ Developer Machine
 │  └─ Ollama Service (localhost:11434)
 │     └─ TinyLLaMA Model (loaded in memory)
 │
-├─ Terminal 2: uv run app/main.py
+├─ Terminal 2: uv run src/main.py
 │  └─ FastAPI (localhost:8000)
-│     ├─ app/main.py (backend)
-│     └─ app/templates/index.html (frontend)
+│     ├─ src/main.py (backend)
+│     └─ src/templates/index.html (frontend)
 │
 └─ Browser: http://localhost:8000
    └─ User interacts via web UI

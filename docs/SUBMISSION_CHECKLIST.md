@@ -572,7 +572,6 @@ project-root/
 ### Code Files (All Present)
 
 - [x] `src/main.py` - Backend (800+ lines, full docstrings)
-- [x] `app/main.py` - Original implementation (for reference)
 - [x] `app/templates/index.html` - Frontend UI
 - [x] `tests/test_chat_api.py` - Test suite (40+ tests)
 - [x] `requirements.txt` - Python dependencies
