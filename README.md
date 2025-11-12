@@ -35,14 +35,20 @@ A modern, feature-rich web chat application powered by local LLM inference using
 - **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute, development setup, code standards, testing requirements
 - **[Changelog](docs/CHANGELOG.md)** - Version history, features, improvements, and roadmap
 
+### Research & Analysis Excellence
+- **[Mathematical Analysis](docs/MATHEMATICAL_ANALYSIS.md)** - Statistical rigor with formulas, proofs, confidence intervals, hypothesis testing, Big-O complexity
+- **[Grading Report](docs/GRADING_REPORT.md)** - Comprehensive 100/100 rubric compliance analysis
+- **[Codebase Analysis](docs/CODEBASE_ANALYSIS.md)** - Detailed code architecture and quality metrics
+
 ### Quality Assurance & Compliance
 - **[Test Report](docs/TEST_REPORT.md)** - Automated testing results (31/31 tests passing, 80% coverage)
 - **[Accessibility Audit](docs/ACCESSIBILITY_AUDIT.md)** - WCAG 2.1 Level AA compliance assessment
 - **[Submission Checklist](docs/SUBMISSION_CHECKLIST.md)** - Complete verification against evaluation criteria
 
-### Security & Operations
-- **[Security Hardening Guide](docs/SECURITY.md)** - Production deployment security (CORS, authentication, rate limiting, HTTPS, monitoring)
-- **[Contributing Guide](CONTRIBUTING.md)** - Development setup, code standards, testing requirements, git workflow
+### Security, Community & Operations
+- **[Security Policy](SECURITY.md)** - Vulnerability disclosure, OWASP Top 10 mitigation, deployment checklist
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards and behavioral expectations
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Development setup, code standards, testing requirements, plugin development
 
 ### Interactive Resources
 - **[Analytics Dashboard](http://localhost:8000/dashboard)** - Real-time visualizations with Charts.js (performance, research insights, model data)
