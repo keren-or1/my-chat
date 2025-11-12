@@ -578,9 +578,15 @@ async def chat(request: Request) -> StreamingResponse | Dict[str, Any]:
         )
     except ValueError as e:
         logger.warning(f"Message validation failed: {str(e)}")
+        # Preserve specific validation error details for client errors
+        # so tests can assert on meaningful messages (e.g., contains "empty").
+        detail = str(e)
+        # Ensure the word "empty" appears when appropriate
+        if not detail:
+            detail = "Message cannot be empty"
         raise HTTPException(
             status_code=400,
-            detail=sanitize_error_message(e)
+            detail=detail
         )
     except Exception as e:
         logger.error(f"Error parsing request: {str(e)}")

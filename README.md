@@ -186,7 +186,9 @@ ollama serve
 │   └── .env.example               # Environment configuration template (14 variables)
 ├── screenshots/
 │   ├── app-ui.png                 # Application UI screenshot
-│   └── app-chat.png               # Chat interaction screenshot
+│   ├── app-chat.png               # Chat interaction screenshot
+│   ├── dashboard.png              # Analytics dashboard overview
+│   └── dashboard-response.png     # Dashboard responses view
 ├── pyproject.toml                 # Project configuration
 ├── uv.lock                        # Dependency lock file
 ├── requirements.txt               # Alternative dependency list
