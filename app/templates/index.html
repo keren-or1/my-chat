@@ -400,11 +400,108 @@
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-10px); }
         }
+
+        /* ========== ACCESSIBILITY STYLES ========== */
+
+        /* Screen reader only content */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+            font-weight: bold;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+
+        /* Enhanced focus styles for better accessibility */
+        input:focus,
+        button:focus,
+        textarea:focus {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .typing-dot {
+                animation: none;
+            }
+        }
+
+        /* Form label styles */
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        /* Form hint text */
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Required indicator */
+        .required {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        /* Character counter */
+        .char-counter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            text-align: right;
+        }
+
+        /* Make status dot accessible */
+        .status-dot[aria-hidden="true"] {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#messagesContainer" class="skip-link">Skip to main content</a>
+
     <!-- Header -->
-    <header>
+    <header role="banner">
         <div class="header-left">
             <div class="logo">💬</div>
             <div class="header-title">
@@ -412,8 +509,8 @@
                 <p>Local LLM Powered Chat</p>
             </div>
         </div>
-        <div class="status-indicator" id="statusIndicator">
-            <div class="status-dot"></div>
+        <div class="status-indicator" id="statusIndicator" role="status" aria-live="polite" aria-label="Service connection status">
+            <div class="status-dot" aria-hidden="true"></div>
             <span id="statusText">Checking...</span>
         </div>
     </header>
@@ -423,7 +520,7 @@
         <!-- Chat Area -->
         <div class="chat-area">
             <!-- Messages Container -->
-            <div class="messages-container" id="messagesContainer">
+            <div class="messages-container" id="messagesContainer" role="log" aria-live="polite" aria-label="Chat messages" aria-relevant="additions">
                 <div class="empty-state">
                     <div class="empty-state-icon">💡</div>
                     <h2>Welcome to Ollama Chat</h2>
@@ -433,17 +530,24 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <form class="input-form" id="chatForm">
+                <form class="input-form" id="chatForm" aria-label="Chat message form">
                     <div class="input-wrapper">
+                        <label for="messageInput" class="sr-only">Chat message</label>
                         <input
                             type="text"
                             id="messageInput"
-                            placeholder="Type your message here..."
+                            placeholder="Type your message here (max 4000 characters)..."
                             autocomplete="off"
                             disabled
+                            aria-label="Message input field"
+                            aria-describedby="charCount"
+                            maxlength="4000"
                         >
+                        <div id="charCount" class="char-counter" aria-live="polite" aria-atomic="true">
+                            <span id="charCountValue">0</span> / 4000 characters
+                        </div>
                     </div>
-                    <button type="submit" id="sendBtn" disabled>
+                    <button type="submit" id="sendBtn" disabled aria-label="Send message">
                         <span id="sendBtnText">Send</span>
                     </button>
                 </form>
@@ -473,7 +577,7 @@
             </div>
 
             <div class="sidebar-section">
-                <button class="clear-btn" id="clearBtn" style="width: 100%;">Clear Chat</button>
+                <button class="clear-btn" id="clearBtn" style="width: 100%;" aria-label="Clear chat history">Clear Chat</button>
             </div>
         </div>
     </div>
@@ -659,6 +763,42 @@
         chatForm.addEventListener('submit', sendMessage);
         clearBtn.addEventListener('click', clearChat);
 
+        // Character counter for accessibility
+        messageInput.addEventListener('input', (e) => {
+            const count = e.target.value.length;
+            const charCountValue = document.getElementById('charCountValue');
+            if (charCountValue) {
+                charCountValue.textContent = count;
+            }
+        });
+
+        // Keyboard shortcuts for accessibility
+        document.addEventListener('keydown', (e) => {
+            // Escape key - clear input
+            if (e.key === 'Escape' && messageInput.value && !isLoading) {
+                messageInput.value = '';
+                const charCountValue = document.getElementById('charCountValue');
+                if (charCountValue) charCountValue.textContent = '0';
+                messageInput.focus();
+            }
+
+            // Alt+C - clear chat
+            if (e.altKey && (e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+                if (!isLoading) {
+                    clearBtn.click();
+                }
+            }
+
+            // Alt+F - focus input
+            if (e.altKey && (e.key === 'f' || e.key === 'F')) {
+                e.preventDefault();
+                if (!messageInput.disabled) {
+                    messageInput.focus();
+                }
+            }
+        });
+
         // Focus input on load
         window.addEventListener('load', () => {
             checkHealth();
@@ -670,7 +810,9 @@
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage(e);
+                if (!isLoading) {
+                    sendMessage(e);
+                }
             }
         });
     </script>
